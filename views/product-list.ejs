@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .add-product-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .add-product-btn:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        .search-box {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px; /* ปรับความกว้างของช่องค้นหา */
+            transition: border-color 0.3s;
+            margin-left: 10px;
+        }
+        .search-box:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+        .search-icon {
+            margin-left: -30px;
+            cursor: pointer;
+            color: #007BFF;
+        }
+        .btn-edit, .btn-delete {
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: #fff;
+        }
+        .btn-edit {
+            background-color: #28a745;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+    </style>
+    <script>
+        function searchProducts() {
+            const input = document.querySelector('.search-box');
+            const filter = input.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const match = Array.from(cells).some(cell => {
+                    return cell.textContent.toLowerCase().includes(filter);
+                });
+                row.style.display = match ? '' : 'none';
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>รายการสินค้า</h1>
+
+        <!-- Header with Add Product Button and Search Box -->
+        <div class="header">
+            <a href="/admin" class="add-product-btn">เพิ่มสินค้า</a>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search products..." onkeyup="searchProducts()">
+                <i class="search-icon">🔍</i>
+            </div>
+        </div>
+
+        <!-- Product Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสสินค้า</th>
+                    <th>ชื่อสินค้า</th>
+                    <th>ราคา (฿)</th>
+                    <th>จำนวน</th>
+                    <th>รูปภาพ</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                <tr>
+                    <td><%= product.product_code %></td>
+                    <td><%= product.product_name %></td>
+                    <td><%= product.price %></td>
+                    <td><%= product.quantity %></td>
+                    <td>
+                        <% if (product.image) { %>
+                            <img src="/uploads/<%= product.image %>" alt="Product Image" width="50">
+                        <% } else { %>
+                            No Image
+                        <% } %>
+                    </td>
+                    <td>
+                        <a href="/edit-product/<%= product.product_id %>" class="btn-edit">Edit</a>
+                        <a href="/delete-product/<%= product.product_id %>" class="btn-delete">Delete</a>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
